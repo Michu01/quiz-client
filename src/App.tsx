@@ -10,6 +10,9 @@ import UserDetails from './routes/Users/Details';
 import UserIndex from './routes/Users/Index';
 import ProfileChangeAvatar from './routes/Profile/ChangeAvatar';
 import ProfileChangePassword from './routes/Profile/ChangePassword';
+import CategoriesIndex from './routes/CategoriesIndex';
+import QuizCreate from './routes/Quizes/Create';
+import QuizEdit from './routes/Quizes/Edit';
 
 const router = createBrowserRouter([
     {
@@ -57,8 +60,16 @@ const router = createBrowserRouter([
                 element: <QuizIndex/>
             },
             {
-                path: "{id}",
+                path: "create",
+                element: <QuizCreate/>
+            },
+            {
+                path: ":id",
                 element: <QuizDetails/>
+            },
+            {
+                path: ":id/edit",
+                element: <QuizEdit/>
             }
         ]
     },
@@ -71,10 +82,14 @@ const router = createBrowserRouter([
                 element: <UserIndex/>
             },
             {
-                path: "{id}",
+                path: ":id",
                 element: <UserDetails/>
             }
         ]
+    },
+    {
+        path: "/categories",
+        element: <CategoriesIndex/>
     }
 ]);
 

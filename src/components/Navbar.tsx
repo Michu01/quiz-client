@@ -65,21 +65,35 @@ const Navbar = () => {
     }
 
     return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light">
+    <nav className="navbar navbar-expand-md navbar-light bg-light">
         <Link className="navbar-brand" to="/">QuizApp</Link>
         <div className="collapse navbar-collapse">
             <ul className="navbar-nav">
+            {
+                user == null ?
                 <li className="nav-item">
                     <Link className="nav-link" to="/quizes">Quizes</Link>
+                </li> :
+                <li className="nav-item dropdown">
+                    <a className="nav-link dropdown-toggle" href="/" role="button" data-toggle="dropdown">Quizes</a>
+                    <div className="dropdown-menu">
+                        <Link className="dropdown-item" to="/quizes">Quiz list</Link>
+                        <Link className="dropdown-item" to="/quizes/create">Create quiz</Link>
+                    </div>
                 </li>
-                {
-                    user != null && 
-                    <>
-                        <li className="nav-item">
-                            <Link className="nav-link" to="/users">Users</Link>
-                        </li>
-                    </>
-                }
+            }
+            {
+                user != null && 
+                <li className="nav-item">
+                    <Link className="nav-link" to="/users">Users</Link>
+                </li>
+            }
+            {
+                user?.role === "Admin" &&
+                <li className="nav-item">
+                    <Link className="nav-link" to="/categories">Categories</Link>
+                </li>
+            }
             </ul>
         </div>
         

@@ -1,7 +1,10 @@
 import Category from "../models/Category";
+import Quiz from "../models/Quiz";
 import User from "../models/User";
 
 class QuizService {
+    private user: User | null = null;
+
     private port = 7109;
     private baseUrl = `https://localhost:${this.port}/api`;
     private keyBase = 'quizApi';
@@ -135,10 +138,15 @@ class QuizService {
     }
 
     signOut() {
+        this.user = null;
         this.cleanStorage();
     }
 
     async getMe(signal: AbortSignal): Promise<User> {
+        if (this.user != null) {
+            return this.user;
+        }
+
         await this.ensureTokenValid();
 
         const token = this.getToken();
@@ -149,7 +157,7 @@ class QuizService {
                 "Authorization": `Bearer ${token}`
             },
             signal: signal
-        }
+        };
 
         const response = await fetch(this.baseUrl + '/users/me', requestInit);
         const json = await response.json();
@@ -168,7 +176,7 @@ class QuizService {
                 "Authorization": `Bearer ${token}`
             },
             signal: signal
-        }
+        };
 
         const response = await fetch(this.baseUrl + '/userAvatars/path', requestInit);
 
@@ -189,23 +197,181 @@ class QuizService {
                 "Authorization": `Bearer ${token}`
             },
             body: data
-        }
+        };
 
         const response = await fetch(this.baseUrl + '/userAvatars/change', requestInit);
 
         return response;
     }
 
-    async getCategories(signal: AbortSignal) : Promise<Category[]> {
+    async getCategories(signal: AbortSignal | null = null) : Promise<Category[]> {
         const requestInit: RequestInit = {
             method: "GET",
             signal: signal
-        }
+        };
 
         const response = await fetch(this.baseUrl + '/questionSetCategories', requestInit);
+
         const json = await response.json();
 
         return json as Category[];
+    }
+
+    async deleteCategory(id: number) {
+        await this.ensureTokenValid();
+
+        const token = this.getToken();
+
+        const requestInit: RequestInit = {
+            method: "DELETE",
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        };
+
+        const response = await fetch(this.baseUrl + `/questionSetCategories/${id}`, requestInit);
+
+        return response;
+    }
+
+    async getCategory(id: number, signal: AbortSignal) {
+        const requestInit: RequestInit = {
+            method: "GET",
+            signal: signal
+        };
+
+        const response = await fetch(this.baseUrl + `/questionSetCategories/${id}`, requestInit);
+
+        const json = await response.json();
+
+        return json as Category;
+    }
+
+    async addCategory(name: string) {
+        await this.ensureTokenValid();
+
+        const token = this.getToken();
+
+        const requestInit: RequestInit = {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({ name })
+        };
+
+        const response = await fetch(this.baseUrl + '/questionSetCategories', requestInit);
+
+        return response;
+    }
+
+    async getQuizes(namePattern: string | null, categoryId: string | null, creatorFilter: string | null, signal: AbortSignal) {
+        const headers = new Headers();
+
+        if (this.isSignedIn()) {
+            await this.ensureTokenValid();
+            const token = this.getToken();
+            headers.set("Authorization", `Bearer ${token}`);
+        }
+
+        const requestInit: RequestInit = {
+            method: "GET",
+            headers: headers,
+            signal: signal
+        };
+
+        const response = await fetch(this.baseUrl + `/questionSets?categoryId=${categoryId ?? ''}&namePattern=${namePattern ?? ''}&creatorFilter=${creatorFilter ?? ''}`, requestInit);
+
+        const json = await response.json();
+
+        return json as Quiz[];
+    }
+
+    async createQuiz(name: string, description: string, categoryId: string, access: string) {
+        await this.ensureTokenValid();
+
+        const token = this.getToken();
+
+        const requestInit: RequestInit = {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({ name, description, categoryId, access })
+        };
+
+        const response = await fetch(this.baseUrl + '/questionSets', requestInit);
+
+        return response;
+    }
+
+    async updateQuiz(id: number, name: string, description: string, categoryId: string, access: string) {
+        await this.ensureTokenValid();
+
+        const token = this.getToken();
+
+        const requestInit: RequestInit = {
+            method: "PATCH",
+            headers: {
+                'Content-Type': 'application/json',
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({ name, description, categoryId, access })
+        };
+
+        const response = await fetch(this.baseUrl + `/questionSets/${id}`, requestInit);
+
+        return response;
+    }
+
+    async getQuiz(id: number, signal: AbortSignal) {
+        const headers = new Headers();
+
+        if (this.isSignedIn()) {
+            await this.ensureTokenValid();
+            const token = this.getToken();
+            headers.set("Authorization", `Bearer ${token}`);
+        }
+         
+        const requestInit: RequestInit = {
+            method: "GET",
+            headers: headers,
+            signal: signal
+        };
+
+        const response = await fetch(this.baseUrl + `/questionSets/${id}`, requestInit);
+
+        return await response.json() as Quiz;
+    }
+
+    async getUser(id: number, signal: AbortSignal) {
+        const requestInit: RequestInit = {
+            method: "GET",
+            signal: signal
+        };
+
+        const response = await fetch(this.baseUrl + `/users/${id}`, requestInit);
+
+        return await response.json() as User;
+    }
+
+    async deleteQuiz(id: number) {
+        await this.ensureTokenValid();
+
+        const token = this.getToken();
+
+        const requestInit: RequestInit = {
+            method: "DELETE",
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        };
+
+        const response = await fetch(this.baseUrl + `/questionSets/${id}`, requestInit);
+
+        return response;
     }
 }
 
