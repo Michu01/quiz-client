@@ -1,11 +1,12 @@
-import Navbar from "../../components/Navbar";
 import Select from "react-select";
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import Category from "../../models/Category";
-import quizService from "../../services/QuizService";
 import QuizAccess from "../../enums/QuizAccess";
 import { useNavigate } from "react-router-dom";
-import Quiz from "../../models/Quiz";
+import categoriesService from "../../services/CategoriesService";
+import quizesService from "../../services/QuizesService";
+import RouteTemplate from "../../components/RouteTemplate";
+import CenteredContainer from "../../components/CenteredContainer";
 
 const QuizCreate = () => {
     const [categories, setCategories] = useState([] as Category[]);
@@ -18,8 +19,12 @@ const QuizCreate = () => {
 
     const fetchCategories = useCallback(async (signal: AbortSignal) => {
         try {
-            const categories = await quizService.getCategories(signal);
-            setCategories(categories);
+            const response = await categoriesService.get(signal);
+            if (response.success) {
+                setCategories(response.categories);
+            } else {
+                console.error(response.message);
+            }
         } catch (e) {
             if (e instanceof DOMException) {
                 console.log(e.message);
@@ -45,52 +50,44 @@ const QuizCreate = () => {
         const categoryId = target.categoryId.value;
         const access = target.access.value;
 
-        const response = await quizService.createQuiz(name, description, categoryId, access); 
+        const response = await quizesService.create(name, description, categoryId, access); 
 
-        if (response.ok) {
-            const quiz = await response.json() as Quiz;    
-            navigate(`/quizes/${quiz.id}`);
-            return;
+        if (response.success) {
+            navigate(`/quizes/${response.quiz!.id}`);
+        } else {
+            setError(response.message);
         }
-
-        const error = await response.text();
-        setError(error);
     }
 
     return (
-        <>
-            <Navbar/>
-            <div className="container">
-                <div className="row">
-                    <div className="col"/>
-                    <form className="col my-3" onSubmit={e => handleSubmit(e)}>
-                        <div className="form-group text-center">
-                            <span className="text-danger">{error}</span>
-                        </div>
-                        <div className="form-group row mr-0">
-                            <label className="col-4 col-form-label" htmlFor="quizName">Name</label>
-                            <input className="col-8 form-control" maxLength={64} title="Name" name="quizName" type="text" required/>
-                        </div>
-                        <div className="form-group">
-                            <label className="form-label" htmlFor="description">Description</label>
-                            <textarea className="form-control" maxLength={256} title="Description" name="description" required/>
-                        </div>
-                        <div className="form-group row">
-                            <label className="col-4 col-form-label" htmlFor="categoryId">Category</label>
-                            <Select className="col-8" name="categoryId" required options={categoryOptions}/>
-                        </div>
-                        <div className="form-group row">
-                            <label className="col-4 col-form-label" htmlFor="access">Access</label>
-                            <Select className="col-8" name="access" required options={accessOptions} defaultValue={accessOptions[0]}/>
-                        </div>
-                        <div className="form-group text-center">
-                            <button className="btn btn-success" type="submit">Create quiz</button>
-                        </div>
-                    </form>
-                    <div className="col"/>
-                </div>
-            </div>
-        </>
+        <RouteTemplate>
+            <CenteredContainer>
+                <form onSubmit={e => handleSubmit(e)}>
+                    <div className="form-group text-center">
+                        <span className="text-danger">{error}</span>
+                    </div>
+                    <div className="form-group row mr-0">
+                        <label className="col-4 col-form-label" htmlFor="quizName">Name</label>
+                        <input className="col-8 form-control" maxLength={64} title="Name" name="quizName" type="text" required/>
+                    </div>
+                    <div className="form-group">
+                        <label className="form-label" htmlFor="description">Description</label>
+                        <textarea className="form-control" maxLength={256} title="Description" name="description" required/>
+                    </div>
+                    <div className="form-group row">
+                        <label className="col-4 col-form-label" htmlFor="categoryId">Category</label>
+                        <Select className="col-8" name="categoryId" required options={categoryOptions}/>
+                    </div>
+                    <div className="form-group row">
+                        <label className="col-4 col-form-label" htmlFor="access">Access</label>
+                        <Select className="col-8" name="access" required options={accessOptions} defaultValue={accessOptions[0]}/>
+                    </div>
+                    <div className="form-group text-center">
+                        <button className="btn btn-success" type="submit">Create quiz</button>
+                    </div>
+                </form>
+            </CenteredContainer>
+        </RouteTemplate>
     );
 }
 

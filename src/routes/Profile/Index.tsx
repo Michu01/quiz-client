@@ -1,19 +1,28 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import Navbar from "../../components/Navbar";
+import CenteredContainer from "../../components/CenteredContainer";
+import RouteTemplate from "../../components/RouteTemplate";
 import User from "../../models/User";
-import quizService from "../../services/QuizService";
+import authService from "../../services/AuthService";
+import avatarsService from "../../services/AvatarsService";
+import usersService from "../../services/UsersService";
 
 const ProfileIndex = () => {
-    const [avatarPath, setAvatarPath] = useState<string | null>(quizService.isSignedIn() ? null : 'defaultAvatar.png');
+    const isSignedIn = authService.isSignedIn();
+
+    const [avatarPath, setAvatarPath] = useState<string | null>('defaultAvatar.png');
     const [user, setUser] = useState<User | null>(null);
 
     const navigate = useNavigate();
 
     const getMe = useCallback(async (signal: AbortSignal) => {
         try {
-            const user = await quizService.getMe(signal);
-            setUser(user);
+            const response = await usersService.getMe(signal);
+            if (response.success) {
+                setUser(response.user);
+            } else {
+                console.error(response.message);
+            }
         } catch (e) {
             if (e instanceof DOMException) {
                 console.log(e.message);
@@ -23,8 +32,11 @@ const ProfileIndex = () => {
 
     const fetchAvatarPath = useCallback(async (signal: AbortSignal) => {
         try {
-            const avatarPath = await quizService.getAvatarPath(signal) ?? 'defaultAvatar.png';
-            setAvatarPath(avatarPath);
+            const response = await avatarsService.getPath(signal);
+
+            const path = response.success ? response.path : 'defaultAvatar.png';
+
+            setAvatarPath(path);
         } catch (e) {
             if (e instanceof DOMException) {
                 console.log(e.message);
@@ -33,8 +45,13 @@ const ProfileIndex = () => {
     }, []);
 
     useEffect(() => {
-        if (!quizService.isSignedIn()) {
-            navigate('/auth/signIn');
+        if (!isSignedIn) {
+            navigate("/auth/signIn");
+        }
+    }, [isSignedIn, navigate]);
+
+    useEffect(() => {
+        if (!isSignedIn) {
             return;
         }
 
@@ -43,10 +60,10 @@ const ProfileIndex = () => {
         getMe(controller.signal);
 
         return () => controller.abort();
-    }, [getMe, navigate]);
+    }, [isSignedIn, getMe, navigate]);
 
     useEffect(() => {
-        if (!quizService.isSignedIn()) {
+        if (!isSignedIn) {
             return;
         }
 
@@ -55,37 +72,30 @@ const ProfileIndex = () => {
         fetchAvatarPath(controller.signal);
 
         return () => controller.abort();
-    }, [fetchAvatarPath]);
+    }, [isSignedIn, fetchAvatarPath]);
 
     return (
-    <>
-        <Navbar/>
-        <div className="container">
-            <div className="row">
-                <div className="col"></div>
-                <div className="col d-flex flex-column">
-                {
-                    user != null &&
-                    <>
-                        <img className="row align-self-center" height="240" alt="avatar" src={ avatarPath == null ? "" : `https://localhost:7109/${avatarPath}?lastmod=${Date.now()}`}/>
-                        <h4 className="row align-self-center">{user.name}</h4>
-                        <div className="row">
-                            <p className="col text-left">Join date:</p>
-                            <p className="col text-right">{user.joinDate.toString()}</p>
-                        </div>
-                        <div className="row justify-content-center">
-                        <Link to="/profile/changeAvatar">Change avatar</Link>
-                        </div>
-                        <div className="row justify-content-center">
-                            <Link to="/profile/changePassword">Change password</Link>
-                        </div>
-                    </>
-                }
-                </div>
-                <div className="col"></div>
-            </div>
-        </div>
-    </>
+        <RouteTemplate>
+            <CenteredContainer>
+            {
+                user != null &&
+                <>
+                    <img className="row align-self-center" height="240" alt="avatar" src={ avatarPath == null ? "" : `https://localhost:7109/${avatarPath}?lastmod=${Date.now()}`}/>
+                    <h4 className="row align-self-center">{user.name}</h4>
+                    <div className="row">
+                        <p className="col text-left">Join date:</p>
+                        <p className="col text-right">{user.joinDate.toString()}</p>
+                    </div>
+                    <div className="row justify-content-center">
+                    <Link to="/profile/changeAvatar">Change avatar</Link>
+                    </div>
+                    <div className="row justify-content-center">
+                        <Link to="/profile/changePassword">Change password</Link>
+                    </div>
+                </>
+            }
+            </CenteredContainer>
+        </RouteTemplate>
     );
 }
 

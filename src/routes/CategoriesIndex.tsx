@@ -1,11 +1,16 @@
 import { FormEvent, useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../components/Navbar";
+import RouteTemplate from "../components/RouteTemplate";
 import Category from "../models/Category";
 import User from "../models/User";
-import quizService from "../services/QuizService";
+import authService from "../services/AuthService";
+import categoriesService from "../services/CategoriesService";
+import usersService from "../services/UsersService";
 
 const CategoriesIndex = () => {
+    const isSignedIn = authService.isSignedIn();
+
+    const [error, setError] = useState("");
     const [user, setUser] = useState<User | null>(null);
     const [categories, setCategories] = useState([] as Category[]);
 
@@ -13,8 +18,12 @@ const CategoriesIndex = () => {
 
     const fetchMe = useCallback(async (signal: AbortSignal) => {
         try {
-            const user = await quizService.getMe(signal);
-            setUser(user);
+            const response = await usersService.getMe(signal);
+            if (response.success) {
+                setUser(response.user);
+            } else {
+                console.error(response.message);
+            }
         } catch (e) {
             if (e instanceof DOMException) {
                 console.log(e.message);
@@ -24,8 +33,12 @@ const CategoriesIndex = () => {
 
     const fetchCategories = useCallback(async (signal: AbortSignal) => {
         try {
-            const categories = await quizService.getCategories(signal);
-            setCategories(categories);
+            const response = await categoriesService.get(signal);
+            if (response.success) {
+                setCategories(response.categories);
+            } else {
+                console.error(response.message);
+            }
         } catch (e) {
             if (e instanceof DOMException) {
                 console.log(e.message);
@@ -34,18 +47,28 @@ const CategoriesIndex = () => {
     }, []);
 
     useEffect(() => {
-        const controller = new AbortController();
-
-        fetchMe(controller.signal);
-
-        return () => controller.abort();
-    }, [fetchMe]);
+        if (!isSignedIn) {
+            navigate("/");
+        }
+    }, [isSignedIn, navigate]);
 
     useEffect(() => {
         if (user != null && user.role !== "Admin") {
             navigate("/");
         }
-    }, [navigate, user]);
+    }, [user, navigate]);
+
+    useEffect(() => {
+        if (!isSignedIn) {
+            return;
+        }
+
+        const controller = new AbortController();
+
+        fetchMe(controller.signal);
+
+        return () => controller.abort();
+    }, [isSignedIn, fetchMe]);
 
     useEffect(() => {
         const controller = new AbortController();
@@ -56,10 +79,11 @@ const CategoriesIndex = () => {
     }, [fetchCategories]);
 
     async function deleteCategory(category: Category) {
-        const { ok } = await quizService.deleteCategory(category.id);
-
-        if (ok) {
+        const response = await categoriesService.delete(category.id);
+        if (response.success) {
             setCategories(categories => categories.filter(c => c.id !== category.id));
+        } else {
+            console.error(response.message);
         }
     }
 
@@ -69,31 +93,34 @@ const CategoriesIndex = () => {
         const name = event.currentTarget.categoryName.value;
         event.currentTarget.categoryName.value = '';
 
-        const response = await quizService.addCategory(name);
+        const response = await categoriesService.create(name);
 
-        if (response.ok) {
-            const category = await response.json() as Category;
-            setCategories(categories => [ ...categories, category]);
+        if (response.success) {
+            setCategories(categories => [ ...categories, response.category!]);
+        } else {
+            setError(response.message);
         }
     }
 
     return (
-        <>
-            <Navbar/>
-        {
-            user != null &&
+        <RouteTemplate>
             <div className="container">
                 <div className="row my-2">
                     <div className="col"/>
-                    <form className="col" onSubmit={e => handleSubmit(e)}>
-                        <div className="form-group row">
-                            <label className="col col-form-label" htmlFor="categoryName">Name</label>
-                            <input className="col form-control" type="text" name="categoryName"/>
-                        </div>
-                        <div className="row justify-content-center">
-                            <button className="btn btn-success" type="submit">Add category</button>
-                        </div>
-                    </form>
+                    <div className="col bg-white rounded">
+                        <form className="p-2" onSubmit={e => handleSubmit(e)}>
+                            <div className="form-group text-center">
+                                <span className="form-text text-danger">{error}</span>
+                            </div>
+                            <div className="form-group row">
+                                <label className="col-4 pl-0 col-form-label" htmlFor="categoryName">Name</label>
+                                <input className="col-8 form-control" type="text" name="categoryName" title="Category name" placeholder="Input category name..."/>
+                            </div>
+                            <div className="row justify-content-center">
+                                <button className="btn btn-success" type="submit">Add category</button>
+                            </div>
+                        </form>
+                    </div>
                     <div className="col"/>
                 </div>
                 <div className="row my-2 justify-content-center">
@@ -108,8 +135,7 @@ const CategoriesIndex = () => {
                 }
                 </div>
             </div>
-        }
-        </>
+        </RouteTemplate>
     );
 }
 

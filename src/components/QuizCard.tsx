@@ -3,7 +3,8 @@ import { Link } from "react-router-dom";
 import Category from "../models/Category";
 import Quiz from "../models/Quiz";
 import User from "../models/User";
-import quizService from "../services/QuizService";
+import categoriesService from "../services/CategoriesService";
+import usersService from "../services/UsersService";
 
 const QuizCard = ({ quiz }: { quiz: Quiz }) => {
     const [category, setCategory] = useState<Category | null>(null);
@@ -14,9 +15,12 @@ const QuizCard = ({ quiz }: { quiz: Quiz }) => {
             if (quiz == null) {
                 return;
             }
-
-            const category = await quizService.getCategory(quiz.categoryId, signal);
-            setCategory(category);
+            const response = await categoriesService.find(quiz.categoryId, signal);
+            if (response.success) {
+                setCategory(response.category);
+            } else {
+                console.error(response.message);
+            }
         } catch (e) {
             if (e instanceof DOMException) {
                 console.log(e.message);
@@ -29,9 +33,12 @@ const QuizCard = ({ quiz }: { quiz: Quiz }) => {
             if (quiz == null) {
                 return;
             }
-
-            const creator = await quizService.getUser(quiz.creatorId, signal);
-            setCreator(creator);
+            const response = await usersService.find(quiz.creatorId, signal);
+            if (response.success) {
+                setCreator(response.user);
+            } else {
+                console.error(response.message);
+            }
         } catch (e) {
             if (e instanceof DOMException) {
                 console.log(e.message);

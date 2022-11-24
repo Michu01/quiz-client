@@ -1,18 +1,20 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import Select from 'react-select';
-import Navbar from "../../components/Navbar";
 import QuizCard from "../../components/QuizCard";
+import RouteTemplate from "../../components/RouteTemplate";
 import QuizCreatorFilter from "../../enums/QuizCreatorFilter";
 import Category from "../../models/Category";
 import Quiz from "../../models/Quiz";
-import quizService from "../../services/QuizService";
+import categoriesService from "../../services/CategoriesService";
+import quizesService from "../../services/QuizesService";
 
 const QuizIndex = () => {
     const [searchParams] = useSearchParams();
 
     const namePattern = searchParams.get('namePattern');
     const categoryId = searchParams.get('categoryId');
+    const creatorId = searchParams.get('creatorId');
     const creatorFilter = searchParams.get('creatorFilter');
 
     const [categories, setCategories] = useState([] as Category[]);
@@ -26,8 +28,12 @@ const QuizIndex = () => {
 
     const fetchCategories = useCallback(async (signal: AbortSignal) => {
         try {
-            const categories = await quizService.getCategories(signal);
-            setCategories(categories);
+            const response = await categoriesService.get(signal);
+            if (response.success) {
+                setCategories(response.categories);
+            } else {
+                console.error(response.message);
+            }
         } catch (e) {
             if (e instanceof DOMException) {
                 console.log(e.message);
@@ -37,14 +43,18 @@ const QuizIndex = () => {
 
     const fetchQuizes = useCallback(async (signal: AbortSignal) => {
         try {
-            const quizes = await quizService.getQuizes(namePattern, categoryId, creatorFilter, signal);
-            setQuizes(quizes);
+            const response = await quizesService.get(namePattern, categoryId, creatorId, creatorFilter, signal);
+            if (response.success) {
+                setQuizes(response.quizes);
+            } else {
+                console.error(response.message);
+            }
         } catch (e) {
             if (e instanceof DOMException) {
                 console.log(e.message);
             } else throw e;
         }
-    }, [namePattern, categoryId, creatorFilter]);
+    }, [namePattern, categoryId, creatorId, creatorFilter]);
 
     useEffect(() => {
         const controller = new AbortController();
@@ -73,32 +83,33 @@ const QuizIndex = () => {
     }, [creatorFilter, creatorFilterOptions]);
 
     return (
-    <>
-        <Navbar/>
-        <div className="d-flex flex-row">
-            <form className="col-2">
-                <div className="form-group row px-1">
-                    <input className="form-control" type="search" name="namePattern" title="Name pattern" placeholder="Input quiz name..." defaultValue={namePattern ?? ''}/>
+        <RouteTemplate>
+            <div className="d-flex flex-row align-items-start">
+                <div className="col-2 bg-white">
+                    <form className="p-1">
+                        <div className="form-group row">
+                            <input className="form-control" type="search" name="namePattern" title="Name pattern" placeholder="Input quiz name..." defaultValue={namePattern ?? ''}/>
+                        </div>
+                        <div className="form-group row">
+                            <label className="col-4 px-0 col-form-label" htmlFor="categoryId">Category</label>
+                            <Select className="col-8 px-0" name="categoryId" isClearable options={categoryOptions} value={selectedCategory} onChange={e => setSelectedCategory(e)}/>
+                        </div>
+                        <div className="form-group row">
+                            <label className="col-4 px-0 col-form-label" htmlFor="creatorFilter">Creator filter</label>
+                            <Select className="col-8 px-0" name="creatorFilter" isClearable options={creatorFilterOptions} value={selectedCreatorFilter} onChange={e => setSelectedCreatorFilter(e)}/>
+                        </div>
+                        <div className="form-group row mb-0">
+                            <button className="col btn btn-primary" type="submit">Search</button>
+                        </div>
+                    </form>
                 </div>
-                <div className="form-group row px-1">
-                    <label className="col-4 px-0 col-form-label" htmlFor="categoryId">Category</label>
-                    <Select className="col-8 px-0" name="categoryId" isClearable options={categoryOptions} value={selectedCategory} onChange={e => setSelectedCategory(e)}/>
+                <div className="col-1"/>
+                <div className="col-6 d-flex flex-row">
+                    { quizList }
                 </div>
-                <div className="form-group row px-1">
-                    <label className="col-4 px-0 col-form-label" htmlFor="creatorFilter">Creator filter</label>
-                    <Select className="col-8 px-0" name="creatorFilter" isClearable options={creatorFilterOptions} value={selectedCreatorFilter} onChange={e => setSelectedCreatorFilter(e)}/>
-                </div>
-                <div className="form-group row px-1">
-                    <button className="col btn btn-primary" type="submit">Search</button>
-                </div>
-            </form>
-            <div className="col-1"/>
-            <div className="col-6 d-flex flex-row">
-                { quizList }
+                <div className="col-3"/>
             </div>
-            <div className="col-3"/>
-        </div>
-    </>
+        </RouteTemplate>
     );
 }
 

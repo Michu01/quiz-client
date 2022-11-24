@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import Navbar from "../../components/Navbar";
 import Category from "../../models/Category";
 import Quiz from "../../models/Quiz";
 import User from "../../models/User";
-import quizService from "../../services/QuizService";
+import categoriesService from "../../services/CategoriesService";
+import quizesService from "../../services/QuizesService";
+import usersService from "../../services/UsersService";
 
 const QuizDetails = () => {
     const params = useParams();
@@ -19,23 +20,30 @@ const QuizDetails = () => {
 
     const fetchQuiz = useCallback(async (signal: AbortSignal) => {
         try {
-            const quiz = await quizService.getQuiz(id, signal);
-            setQuiz(quiz);
+            const response = await quizesService.find(id, signal);
+            if (response.success) {
+                setQuiz(response.quiz);
+            } else {
+                navigate("/quizes");
+            }
         } catch (e) {
             if (e instanceof DOMException) {
                 console.log(e.message);
             } else throw e;
         }
-    }, [id]);
+    }, [id, navigate]);
 
     const fetchCategory = useCallback(async (signal: AbortSignal) => {
         try {
             if (quiz == null) {
                 return;
             }
-
-            const category = await quizService.getCategory(quiz.categoryId, signal);
-            setCategory(category);
+            const response = await categoriesService.find(quiz.categoryId, signal);
+            if (response.success) {
+                setCategory(response.category);
+            } else {
+                console.error(response.message);
+            }
         } catch (e) {
             if (e instanceof DOMException) {
                 console.log(e.message);
@@ -48,9 +56,12 @@ const QuizDetails = () => {
             if (quiz == null) {
                 return;
             }
-
-            const creator = await quizService.getUser(quiz.creatorId, signal);
-            setCreator(creator);
+            const response = await usersService.find(quiz.creatorId, signal);
+            if (response.success) {
+                setCreator(response.user);
+            } else {
+                console.error(response.message);
+            }
         } catch (e) {
             if (e instanceof DOMException) {
                 console.log(e.message);
@@ -83,16 +94,15 @@ const QuizDetails = () => {
     }, [fetchCreator]);
 
     async function deleteQuiz() {
-        const response = await quizService.deleteQuiz(id);
-
-        if (response.ok) {
+        const response = await quizesService.delete(id);
+        if (response.success) {
             navigate('/quizes');
+        } else {
+            console.error(response.message);
         }
     }
 
     return (
-    <>
-        <Navbar/>
         <div className="container">
             <div className="row">
                 <div className="col"/>
@@ -135,8 +145,6 @@ const QuizDetails = () => {
                 <div className="col"/>
             </div>
         </div>
-        
-    </>
     );
 }
 
