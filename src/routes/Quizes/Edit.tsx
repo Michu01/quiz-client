@@ -6,6 +6,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import Quiz from "../../models/Quiz";
 import categoriesService from "../../services/CategoriesService";
 import quizesService from "../../services/QuizesService";
+import RouteTemplate from "../../components/RouteTemplate";
+import CenteredContainer from "../../components/CenteredContainer";
 
 const QuizEdit = () => {
     const params = useParams();
@@ -101,10 +103,9 @@ const QuizEdit = () => {
     }
 
     return (
-        <div className="container">
-            <div className="row">
-                <div className="col"/>
-                <form className="col my-3" onSubmit={e => handleSubmit(e)}>
+        <RouteTemplate>
+            <CenteredContainer>
+                <form onSubmit={e => handleSubmit(e)}>
                     <div className="form-group text-center">
                         <span className="text-danger">{error}</span>
                     </div>
@@ -128,9 +129,8 @@ const QuizEdit = () => {
                         <button className="btn btn-success" type="submit">Update quiz</button>
                     </div>
                 </form>
-                <div className="col"/>
-            </div>
-        </div>
+            </CenteredContainer>
+        </RouteTemplate>
     );
 }
 

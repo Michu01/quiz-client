@@ -98,16 +98,15 @@ const QuizIndex = () => {
                             <label className="col-4 px-0 col-form-label" htmlFor="creatorFilter">Creator filter</label>
                             <Select className="col-8 px-0" name="creatorFilter" isClearable options={creatorFilterOptions} value={selectedCreatorFilter} onChange={e => setSelectedCreatorFilter(e)}/>
                         </div>
-                        <div className="form-group row mb-0">
+                        <div className="row">
                             <button className="col btn btn-primary" type="submit">Search</button>
                         </div>
                     </form>
                 </div>
-                <div className="col-1"/>
-                <div className="col-6 d-flex flex-row">
+                <div className="col-8 d-flex flex-row flex-wrap justify-content-center m-1">
                     { quizList }
                 </div>
-                <div className="col-3"/>
+                <div className="col-2"/>
             </div>
         </RouteTemplate>
     );

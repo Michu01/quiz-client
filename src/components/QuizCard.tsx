@@ -63,21 +63,21 @@ const QuizCard = ({ quiz }: { quiz: Quiz }) => {
     }, [fetchCreator]);
 
     return (
-        <div className="card m-2">
+        <div className="quiz-card card m-1">
             <div className="card-body">
-                <h5>{ quiz.name }</h5>
-                <p>{ quiz.description }</p>
+                <h5 className="card-title">{ quiz.name }</h5>
+                <p className="card-text">{ quiz.description }</p>
                 <dl>
                     <div className="row">
-                        <dt className="col">Access</dt>
+                        <dt className="col text-left">Access</dt>
                         <dd className="col text-right">{ quiz.access }</dd>
                     </div>
                     <div className="row">
-                        <dt className="col">Category</dt>
+                        <dt className="col text-left">Category</dt>
                         <dd className="col text-right">{ category && category.name }</dd>
                     </div>
                     <div className="row">
-                        <dt className="col">Creator</dt>
+                        <dt className="col text-left">Creator</dt>
                         <dd className="col text-right">{ creator && <Link to={ `/users/${ creator.id }` }>{ creator.name }</Link> }</dd>
                     </div>
                 </dl>

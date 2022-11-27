@@ -89,12 +89,9 @@ const Navbar = () => {
                         </div>
                     </li>
                 }
-                {
-                    user != null && 
                     <li className="nav-item">
                         <Link className="nav-link" to="/users">Users</Link>
-                    </li>
-                }
+                    </li>    
                 {
                     user?.role === "Admin" &&
                     <li className="nav-item">
@@ -121,12 +118,13 @@ const Navbar = () => {
                 <div className="dropdown">
                     <button className="btn btn-light btn-outline-dark dropdown-toggle" data-toggle="dropdown">
                         <span className="h4 align-middle mr-1">{user.name}</span>
-                        <img className="rounded-circle ml-1" height="40" width="40" alt="avatar" src={ avatarPath }/>
+                        <img className="rounded-circle ml-1 object-fit-cover" height="40" width="40" alt="avatar" src={ avatarPath }/>
                     </button>
                     <div className="dropdown-menu dropdown-menu-right">
                         <Link className="dropdown-item" to="/profile">Profile</Link>
-                        <Link className="dropdown-item" to="/friends">Friends</Link>
-                        <Link className="dropdown-item" to="/quizes/my">Quizes</Link>
+                        <Link className="dropdown-item" to="/users?friendsOnly=on">Friends</Link>
+                        <Link className="dropdown-item" to="/friendshipRequests">Friendship requests</Link>
+                        <Link className="dropdown-item" to="/quizes?creatorFilter=me">Quizes</Link>
                         <Link className="dropdown-item" to="/" onClick={signOut}>Sign out</Link>
                     </div>
                 </div>

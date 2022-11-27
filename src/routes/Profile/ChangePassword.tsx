@@ -25,7 +25,7 @@ const ProfileChangePassword = () => {
         if (!authService.isSignedIn()) {
             navigate("/auth/signIn");
         }
-    });
+    }, [navigate]);
 
     return (
         <RouteTemplate>
@@ -35,11 +35,11 @@ const ProfileChangePassword = () => {
                         <span className="form-text text-danger">{error}</span>
                     </div>
                     <div className="form-group row">
-                        <label className="col col-form-label" htmlFor="currentPassword">Current password</label>
+                        <label className="col col-form-label text-left" htmlFor="currentPassword">Current password</label>
                         <input className="col form-control" title="current password" name="currentPassword" type="password" required></input>
                     </div>
                     <div className="form-group row">
-                        <label className="col col-form-label" htmlFor="newPassword">New password</label>
+                        <label className="col col-form-label text-left" htmlFor="newPassword">New password</label>
                         <input className="col form-control" title="new password" name="newPassword" type="password" required></input>
                     </div>
                     <div className="text-center">

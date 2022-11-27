@@ -10,12 +10,12 @@ import usersService from "../../services/UsersService";
 const ProfileIndex = () => {
     const isSignedIn = authService.isSignedIn();
 
-    const [avatarPath, setAvatarPath] = useState<string | null>('defaultAvatar.png');
+    const [avatarPath, setAvatarPath] = useState<string>('defaultAvatar.png');
     const [user, setUser] = useState<User | null>(null);
 
     const navigate = useNavigate();
 
-    const getMe = useCallback(async (signal: AbortSignal) => {
+    const fetchMe = useCallback(async (signal: AbortSignal) => {
         try {
             const response = await usersService.getMe(signal);
             if (response.success) {
@@ -34,9 +34,9 @@ const ProfileIndex = () => {
         try {
             const response = await avatarsService.getPath(signal);
 
-            const path = response.success ? response.path : 'defaultAvatar.png';
-
-            setAvatarPath(path);
+            if (response.success) {
+                setAvatarPath(`https://localhost:7109/${response.path}?lastmod=${Date.now()}`);
+            }
         } catch (e) {
             if (e instanceof DOMException) {
                 console.log(e.message);
@@ -57,10 +57,10 @@ const ProfileIndex = () => {
 
         const controller = new AbortController();
 
-        getMe(controller.signal);
+        fetchMe(controller.signal);
 
         return () => controller.abort();
-    }, [isSignedIn, getMe, navigate]);
+    }, [isSignedIn, fetchMe]);
 
     useEffect(() => {
         if (!isSignedIn) {
@@ -80,17 +80,18 @@ const ProfileIndex = () => {
             {
                 user != null &&
                 <>
-                    <img className="row align-self-center" height="240" alt="avatar" src={ avatarPath == null ? "" : `https://localhost:7109/${avatarPath}?lastmod=${Date.now()}`}/>
-                    <h4 className="row align-self-center">{user.name}</h4>
-                    <div className="row">
-                        <p className="col text-left">Join date:</p>
-                        <p className="col text-right">{user.joinDate.toString()}</p>
+                    <div className="m-1">
+                        <img height="240" alt="avatar" src={ avatarPath }/>
                     </div>
-                    <div className="row justify-content-center">
-                    <Link to="/profile/changeAvatar">Change avatar</Link>
+                    <h4 className="m-1">{user.name}</h4>
+                    <div className="row m-1">
+                        <p className="col text-left my-auto">Join date:</p>
+                        <p className="col text-right my-auto">{user.joinDate.toString()}</p>
                     </div>
-                    <div className="row justify-content-center">
-                        <Link to="/profile/changePassword">Change password</Link>
+                    <div className="row justify-content-center m-1">
+                        <Link className="btn btn-primary mx-1" to="/profile/changeAvatar">Change avatar</Link>
+                        <Link className="btn btn-primary mx-1" to="/profile/changePassword">Change password</Link>
+                        <Link className="btn btn-primary mx-1" to="/profile/changeUsername">Change username</Link>
                     </div>
                 </>
             }

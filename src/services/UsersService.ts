@@ -6,7 +6,9 @@ class UsersService {
     private baseUrl = 'users';
 
     async get(namePattern: string | null, friendsOnly: boolean, signal: AbortSignal): Promise<{ success: boolean, message: string, users: User[] }> {
-        const { success, message, response } = await apiService.get(`${this.baseUrl}?namePattern=${namePattern ?? ''}&friendsOnly=${friendsOnly}`, { signal });
+        const url = `${this.baseUrl}?namePattern=${namePattern ?? ''}&friendsOnly=${friendsOnly}`;
+
+        const { success, message, response } = await apiService.get(url, { signal, shouldAuthorize: ShouldAuthorize.Optional });
 
         return { success, message, users: success ? await response.json() : [] };
     }

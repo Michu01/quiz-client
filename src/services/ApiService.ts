@@ -26,7 +26,7 @@ class ApiService {
             headers.append("Authorization", `Bearer ${token}`);
         }
 
-        if (method === "POST" && isContentTypeJson) {
+        if ((method === "POST" || method === "PATCH") && isContentTypeJson) {
             headers.append("Content-Type", "application/json");
         }
 

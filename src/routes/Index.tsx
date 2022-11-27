@@ -46,10 +46,10 @@ const Index = () => {
                 <>
                     <h1>Welcome back, {user.name}!</h1>
                     <Link className="h3" to="/quizes">All quizes</Link>
-                    <Link className="h3" to="/quizes/my">My quizes</Link>
-                    <Link className="h3" to="/quizes/friends">Friends' quizes</Link>
+                    <Link className="h3" to="/quizes?creatorFilter=me">My quizes</Link>
+                    <Link className="h3" to="/quizes?creatorFilter=friends">Friends' quizes</Link>
                     <Link className="h3" to="/quizes/create">Create quiz</Link>
-                    <Link className="h3" to="/friends">Friends</Link>
+                    <Link className="h3" to="/users?friendsOnly=on">Friends</Link>
                     <Link className="h3" to="/profile">Profile</Link>
                 </>
             }

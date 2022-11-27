@@ -13,6 +13,8 @@ import ProfileChangePassword from './routes/Profile/ChangePassword';
 import CategoriesIndex from './routes/CategoriesIndex';
 import QuizCreate from './routes/Quizes/Create';
 import QuizEdit from './routes/Quizes/Edit';
+import FriendshipRequests from './routes/Profile/FriendshipRequests';
+import ProfileChangeUsername from './routes/Profile/ChangeUsername';
 
 const router = createBrowserRouter([
     {
@@ -48,6 +50,10 @@ const router = createBrowserRouter([
             {
                 path: "changePassword",
                 element: <ProfileChangePassword/>
+            },
+            {
+                path: "changeUsername",
+                element: <ProfileChangeUsername/>
             }
         ]
     },
@@ -90,6 +96,10 @@ const router = createBrowserRouter([
     {
         path: "/categories",
         element: <CategoriesIndex/>
+    },
+    {
+        path: "/friendshipRequests",
+        element: <FriendshipRequests/>
     }
 ]);
 

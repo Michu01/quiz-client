@@ -3,19 +3,17 @@ import { useNavigate } from "react-router-dom";
 import CenteredContainer from "../../components/CenteredContainer";
 import RouteTemplate from "../../components/RouteTemplate";
 import authService from "../../services/AuthService";
-import avatarsService from "../../services/AvatarsService";
 
-const ProfileChangeAvatar = () => {
+const ProfileChangeUsername = () => {
     const [error, setError] = useState("");
+    
     const navigate = useNavigate();
 
     async function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
-        
-        const file = event.currentTarget.avatar.files[0];
-
-        const response = await avatarsService.change(file);
-
+        const username = event.currentTarget.username.value;
+        const password = event.currentTarget.password.value;
+        const response = await authService.changeUsername(username, password);
         if (response.success) {
             navigate("/profile");
         } else {
@@ -36,11 +34,16 @@ const ProfileChangeAvatar = () => {
                     <div className="form-group text-center">
                         <span className="form-text text-danger">{error}</span>
                     </div>
-                    <div className="form-group">
-                        <input className="col form-control" title="avatar" name="avatar" type="file" required/>
+                    <div className="form-group row">
+                        <label className="col col-form-label text-left" htmlFor="username">New username</label>
+                        <input className="col form-control" title="Username" name="username" type="text" required></input>
+                    </div>
+                    <div className="form-group row">
+                        <label className="col col-form-label text-left" htmlFor="password">Password</label>
+                        <input className="col form-control" title="Password" name="password" type="password" required></input>
                     </div>
                     <div className="text-center">
-                        <button className="btn btn-primary" type="submit">Change avatar</button>
+                        <button className="btn btn-primary" type="submit">Change username</button>
                     </div>
                 </form>
             </CenteredContainer>
@@ -48,4 +51,4 @@ const ProfileChangeAvatar = () => {
     );
 }
 
-export default ProfileChangeAvatar;
+export default ProfileChangeUsername;

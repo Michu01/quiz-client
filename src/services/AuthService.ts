@@ -121,6 +121,25 @@ class AuthService {
 
         return { success, message };
     }
+
+    async changeUsername(name: string, password: string): Promise<{ success: boolean, message: string }> {
+        const body = JSON.stringify({ name, password });
+
+        const { success, message, response } = await apiService.post(`${this.baseUrl}/changeUsername`, { body, shouldAuthorize: ShouldAuthorize.Yes });
+
+        if (!success) {
+            return { success, message };
+        }
+
+        this.setLogin(name);
+
+        const token = await response.json() as Token;
+
+        this.setToken(token.value);
+        this.setTokenExpirationTime(token.expirationTime);
+
+        return { success, message };
+    }
 }
 
 const authService = new AuthService();
