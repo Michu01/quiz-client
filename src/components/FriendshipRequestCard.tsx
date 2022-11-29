@@ -1,17 +1,14 @@
 import { useCallback, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import FriendshipRequest from "../models/FriendshipRequest";
 import User from "../models/User";
 import avatarsService from "../services/AvatarsService";
 import friendshipRequestsService from "../services/FriendshipRequestsService";
 import usersService from "../services/UsersService";
 
-const FriendshipRequestCard = ({ friendshipRequest }: { friendshipRequest: FriendshipRequest }) => {
+const FriendshipRequestCard = ({ friendshipRequest, remove }: { friendshipRequest: FriendshipRequest, remove: () => void }) => {
     const [user, setUser] = useState<User | null>(null);
     const [myId, setMyId] = useState<number | null>(null);
     const [avatarPath, setAvatarPath] = useState<string>('defaultAvatar.png');
-
-    const navigate = useNavigate();
 
     const fetchMyId = useCallback(async (signal: AbortSignal) => {
         try {
@@ -91,18 +88,30 @@ const FriendshipRequestCard = ({ friendshipRequest }: { friendshipRequest: Frien
     }, [myId, fetchAvatarPath]);
 
     async function cancel() {
-        await friendshipRequestsService.cancel(friendshipRequest.receiverId);
-        navigate(0);
+        const response = await friendshipRequestsService.cancel(friendshipRequest.receiverId);
+        if (response.success) {
+            remove();
+        } else {
+            console.error(response.message);
+        }
     } 
 
     async function decline() {
-        await friendshipRequestsService.decline(friendshipRequest.senderId);
-        navigate(0);
+        const response = await friendshipRequestsService.decline(friendshipRequest.senderId);
+        if (response.success) {
+            remove();
+        } else {
+            console.error(response.message);
+        }
     }
 
     async function accept() {
-        await friendshipRequestsService.accept(friendshipRequest.senderId);
-        navigate(0);
+        const response = await friendshipRequestsService.accept(friendshipRequest.senderId);
+        if (response.success) {
+            remove();
+        } else {
+            console.error(response.message);
+        }
     }
 
     return (

@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import Select from 'react-select';
 import QuizCard from "../../components/QuizCard";
 import RouteTemplate from "../../components/RouteTemplate";
-import QuizCreatorFilter from "../../enums/QuizCreatorFilter";
+import CreatorFilter from "../../enums/CreatorFilter";
 import Category from "../../models/Category";
 import Quiz from "../../models/Quiz";
 import categoriesService from "../../services/CategoriesService";
@@ -23,7 +23,7 @@ const QuizIndex = () => {
     const [selectedCreatorFilter, setSelectedCreatorFilter] = useState<{ label: string, value: string } | null>(null);
 
     const categoryOptions = useMemo(() => categories.map(c => ({ label: c.name, value: c.id })), [categories]);
-    const creatorFilterOptions = useMemo(() => Object.keys(QuizCreatorFilter).filter(e => Number.isNaN(Number.parseInt(e))).map(o => ({ label: o, value: o })), []);
+    const creatorFilterOptions = useMemo(() => Object.keys(CreatorFilter).filter(e => Number.isNaN(Number.parseInt(e))).map(o => ({ label: o, value: o.toLowerCase() })), []);
     const quizList = useMemo(() => quizes.map(quiz => <QuizCard key={quiz.id} quiz={quiz}/>), [quizes]);
 
     const fetchCategories = useCallback(async (signal: AbortSignal) => {

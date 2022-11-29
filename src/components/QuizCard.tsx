@@ -63,7 +63,7 @@ const QuizCard = ({ quiz }: { quiz: Quiz }) => {
     }, [fetchCreator]);
 
     return (
-        <div className="quiz-card card m-1">
+        <div className="quiz-card card m-3">
             <div className="card-body">
                 <h5 className="card-title">{ quiz.name }</h5>
                 <p className="card-text">{ quiz.description }</p>

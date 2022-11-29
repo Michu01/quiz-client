@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import CenteredContainer from "../../components/CenteredContainer";
 import RouteTemplate from "../../components/RouteTemplate";
+import VerticallyCenteredContainer from "../../components/VerticallyCenteredContainer";
 import User from "../../models/User";
 import authService from "../../services/AuthService";
 import avatarsService from "../../services/AvatarsService";
@@ -76,26 +76,32 @@ const ProfileIndex = () => {
 
     return (
         <RouteTemplate>
-            <CenteredContainer>
-            {
-                user != null &&
-                <>
-                    <div className="m-1">
-                        <img height="240" alt="avatar" src={ avatarPath }/>
+            <VerticallyCenteredContainer>
+                <div className="d-flex flex-row">
+                    <div className="col-2"/>
+                    <div className="col-8 d-flex flex-column align-items-center bg-white rounded p-3">
+                    {
+                        user != null &&
+                        <>
+                            <div className="m-1">
+                                <img height="240" alt="avatar" src={ avatarPath }/>
+                            </div>
+                            <h4 className="m-1">{user.name}</h4>
+                            <div className="row m-1">
+                                <p className="col text-left my-auto">Join date:</p>
+                                <p className="col text-right my-auto">{user.joinDate.toString()}</p>
+                            </div>
+                            <div className="row justify-content-center m-1">
+                                <Link className="btn btn-primary m-1" to="/profile/changeAvatar">Change avatar</Link>
+                                <Link className="btn btn-primary m-1" to="/profile/changePassword">Change password</Link>
+                                <Link className="btn btn-primary m-1" to="/profile/changeUsername">Change username</Link>
+                            </div>
+                        </>
+                    }
                     </div>
-                    <h4 className="m-1">{user.name}</h4>
-                    <div className="row m-1">
-                        <p className="col text-left my-auto">Join date:</p>
-                        <p className="col text-right my-auto">{user.joinDate.toString()}</p>
-                    </div>
-                    <div className="row justify-content-center m-1">
-                        <Link className="btn btn-primary mx-1" to="/profile/changeAvatar">Change avatar</Link>
-                        <Link className="btn btn-primary mx-1" to="/profile/changePassword">Change password</Link>
-                        <Link className="btn btn-primary mx-1" to="/profile/changeUsername">Change username</Link>
-                    </div>
-                </>
-            }
-            </CenteredContainer>
+                    <div className="col-2"/>
+                </div>
+            </VerticallyCenteredContainer>
         </RouteTemplate>
     );
 }

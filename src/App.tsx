@@ -15,6 +15,8 @@ import QuizCreate from './routes/Quizes/Create';
 import QuizEdit from './routes/Quizes/Edit';
 import FriendshipRequests from './routes/Profile/FriendshipRequests';
 import ProfileChangeUsername from './routes/Profile/ChangeUsername';
+import QuizEditQuestions from './routes/Quizes/EditQuestions';
+import QuizSolve from './routes/Quizes/Solve';
 
 const router = createBrowserRouter([
     {
@@ -76,6 +78,14 @@ const router = createBrowserRouter([
             {
                 path: ":id/edit",
                 element: <QuizEdit/>
+            },
+            {
+                path: ":id/editQuestions",
+                element: <QuizEditQuestions/>
+            },
+            {
+                path: ":id/solve",
+                element: <QuizSolve/>
             }
         ]
     },

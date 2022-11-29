@@ -46,13 +46,17 @@ const FriendshipRequests = () => {
         }
     }, [isSignedIn, navigate]);
 
+    function remove(friendshipRequest: FriendshipRequest) {
+        setFriendshipRequests(friendshipRequests => friendshipRequests?.filter(fr => fr !== friendshipRequest) ?? null);
+    }
+
     return (
         <RouteTemplate>
             <div className="container">
                 <div className="row">
                     <div className="col-3"/>
                     <div className="col-6">
-                        { friendshipRequests != null && friendshipRequests.map(fr => <FriendshipRequestCard key={ (fr.receiverId, fr.senderId) } friendshipRequest={fr}/>) }
+                        { friendshipRequests != null && friendshipRequests.map(fr => <FriendshipRequestCard key={ (fr.receiverId, fr.senderId) } friendshipRequest={fr} remove={() => remove(fr)}/>) }
                     </div>
                     <div className="col-3"/>
                 </div>

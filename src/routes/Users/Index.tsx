@@ -84,11 +84,10 @@ const UserIndex = () => {
                         </div>
                     </form>
                 </div>
-                <div className="col-1"/>
-                <div className="col-6 d-flex flex-row">
+                <div className="col-8 d-flex flex-row flex-wrap justify-content-center m-1">
                     { userList }
                 </div>
-                <div className="col-3"/>
+                <div className="col-2"/>
             </div>
         </RouteTemplate>
     );

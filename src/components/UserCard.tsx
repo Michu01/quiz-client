@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import User from "../models/User";
+import authService from "../services/AuthService";
 import avatarsService from "../services/AvatarsService";
 import FriendInviteButton from "./FriendInviteButton";
 
@@ -29,7 +30,7 @@ const UserCard = ({ user, isMe }: { user: User, isMe: boolean }) => {
     }, [fetchAvatarPath]);
 
     return (
-        <div className="user-card card m-2 p-1 justify-content-center">
+        <div className="user-card card m-3 justify-content-center">
             <div className="image">
                 <img alt="avatar" src={ avatarPath }/>
             </div>
@@ -40,9 +41,7 @@ const UserCard = ({ user, isMe }: { user: User, isMe: boolean }) => {
                 <div className="row justify-content-center">
                     <Link className="btn btn-primary m-1" to={ isMe ? '/profile' : `/users/${user.id}` }>Profile</Link>
                     <Link className="btn btn-primary m-1" to={ `/quizes?creatorId=${user.id}` }>Quizes</Link>
-                </div>
-                <div className="row justify-content-center">
-                    { !isMe && <FriendInviteButton userId={user.id}/> }
+                    { !isMe && authService.isSignedIn() && <FriendInviteButton className="m-1" userId={user.id}/> }
                 </div>
             </div>
         </div>

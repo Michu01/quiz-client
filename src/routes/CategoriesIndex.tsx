@@ -107,13 +107,13 @@ const CategoriesIndex = () => {
             <div className="container">
                 <div className="row my-2">
                     <div className="col"/>
-                    <div className="col bg-white rounded">
-                        <form className="p-2" onSubmit={e => handleSubmit(e)}>
+                    <div className="d-flex flex-row justify-content-center col bg-white rounded p-3">
+                        <form onSubmit={e => handleSubmit(e)}>
                             <div className="form-group text-center">
                                 <span className="form-text text-danger">{error}</span>
                             </div>
                             <div className="form-group row">
-                                <label className="col-4 pl-0 col-form-label" htmlFor="categoryName">Name</label>
+                                <label className="col-4 col-form-label" htmlFor="categoryName">Name</label>
                                 <input className="col-8 form-control" type="text" name="categoryName" title="Category name" placeholder="Input category name..."/>
                             </div>
                             <div className="row justify-content-center">
