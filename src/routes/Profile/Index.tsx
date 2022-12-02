@@ -79,7 +79,7 @@ const ProfileIndex = () => {
             <VerticallyCenteredContainer>
                 <div className="d-flex flex-row">
                     <div className="col-2"/>
-                    <div className="col-8 d-flex flex-column align-items-center bg-white rounded p-3">
+                    <div className="col-8 d-flex flex-column align-items-center rounded p-3 opaque-white">
                     {
                         user != null &&
                         <>

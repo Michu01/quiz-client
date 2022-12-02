@@ -55,3 +55,7 @@ header {
 .quiz-card {
   width: 16rem;
 }
+
+.opaque-white {
+  background-color: rgb(255, 255, 255, 0.9);
+}
