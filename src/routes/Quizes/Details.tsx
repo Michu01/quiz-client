@@ -136,49 +136,45 @@ const QuizDetails = () => {
     return (
         <RouteTemplate>
             <VerticallyCenteredContainer>
-                <div className="d-flex flex-row">
-                    <div className="col-2"/>
-                    <div className="col-8 d-flex flex-column align-items-center rounded p-3 opaque-white">
-                    {
-                        quiz != null && 
-                        <>
-                            <dl className="w-50">
-                                <div className="row my-1">
-                                    <dt className="col text-left">Name</dt>
-                                    <dd className="col text-right">{ quiz.name }</dd>
-                                </div>
-                                <div className="my-1">
-                                    <dt className="text-left">Description</dt>
-                                    <dd className="text-left">{ quiz.description }</dd>
-                                </div>
-                                <div className="row my-1">
-                                    <dt className="col text-left">Category</dt>
-                                    <dd className="col text-right">{ category != null && <Link to={`/quizes?categoryId=${category.id}`}>{category.name}</Link> }</dd>
-                                </div>
-                                <div className="row my-1">
-                                    <dt className="col text-left">Creator</dt>
-                                    <dd className="col text-right">{ creator != null && <Link to={`/users/${creator.id}`}>{creator.name}</Link> }</dd>
-                                </div>
-                                <div className="row my-1">
-                                    <dt className="col text-left">Access</dt>
-                                    <dd className="col text-right">{ quiz.access }</dd>
-                                </div>
-                            </dl>
-                            <div className="d-flex flex-row flex-wrap justify-content-center">
-                                <Link className="btn btn-success m-1" to={`/quizes/${quiz.id}/solve`}>Solve</Link>
-                                {
-                                    me != null && (me.role === "Admin" || (quiz != null && me.id === quiz.creatorId)) &&
-                                    <>
-                                        <Link className="btn btn-primary m-1" to={`/quizes/${quiz.id}/edit`}>Edit</Link>
-                                        <Link className="btn btn-primary m-1" to={`/quizes/${quiz.id}/editQuestions`}>Edit questions</Link>
-                                        <button className="btn btn-danger m-1" onClick={deleteQuiz}>Delete</button>
-                                    </>
-                                }
+                <div className="min-w-75 min-h-50 d-flex flex-column justify-content-center align-items-center rounded p-3 opaque-white">
+                {
+                    quiz != null && 
+                    <>
+                        <dl className="w-50">
+                            <div className="row my-1">
+                                <dt className="col text-left">Name</dt>
+                                <dd className="col text-right">{ quiz.name }</dd>
                             </div>
-                        </>
-                    }
-                    </div>
-                    <div className="col-2"/>
+                            <div className="my-1">
+                                <dt className="text-left">Description</dt>
+                                <dd className="text-left">{ quiz.description }</dd>
+                            </div>
+                            <div className="row my-1">
+                                <dt className="col text-left">Category</dt>
+                                <dd className="col text-right">{ category != null && <Link to={`/quizes?categoryId=${category.id}`}>{category.name}</Link> }</dd>
+                            </div>
+                            <div className="row my-1">
+                                <dt className="col text-left">Creator</dt>
+                                <dd className="col text-right">{ creator != null && <Link to={`/users/${creator.id}`}>{creator.name}</Link> }</dd>
+                            </div>
+                            <div className="row my-1">
+                                <dt className="col text-left">Access</dt>
+                                <dd className="col text-right">{ quiz.access }</dd>
+                            </div>
+                        </dl>
+                        <div className="d-flex flex-row flex-wrap justify-content-center">
+                            <Link className="btn btn-success m-1" to={`/quizes/${quiz.id}/solve`}>Solve</Link>
+                            {
+                                me != null && (me.role === "Admin" || (quiz != null && me.id === quiz.creatorId)) &&
+                                <>
+                                    <Link className="btn btn-primary m-1" to={`/quizes/${quiz.id}/edit`}>Edit</Link>
+                                    <Link className="btn btn-primary m-1" to={`/quizes/${quiz.id}/editQuestions`}>Edit questions</Link>
+                                    <button className="btn btn-danger m-1" onClick={deleteQuiz}>Delete</button>
+                                </>
+                            }
+                        </div>
+                    </>
+                }
                 </div>
             </VerticallyCenteredContainer>
         </RouteTemplate>

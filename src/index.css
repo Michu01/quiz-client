@@ -59,3 +59,15 @@ header {
 .opaque-white {
   background-color: rgb(255, 255, 255, 0.9);
 }
+
+.hover:hover {
+  background-color: rgb(2, 117, 216, 0.2);
+}
+
+.min-w-75 {
+  min-width: 75%;
+}
+
+.min-h-50 {
+  min-height: 50%;
+}

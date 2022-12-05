@@ -6,7 +6,7 @@ import avatarsService from "../services/AvatarsService";
 import FriendInviteButton from "./FriendInviteButton";
 
 const UserCard = ({ user, isMe }: { user: User, isMe: boolean }) => {
-    const [avatarPath, setAvatarPath] = useState("defaultAvatar.png");
+    const [avatarPath, setAvatarPath] = useState("/defaultAvatar.png");
     
     const fetchAvatarPath = useCallback(async (signal: AbortSignal) => {
         try {

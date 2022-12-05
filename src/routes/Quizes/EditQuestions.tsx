@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import QuestionCard from "../../components/QuestionCard";
+import QuestionEditCard from "../../components/QuestionEditCard";
 import RouteTemplate from "../../components/RouteTemplate";
 import VerticallyCenteredContainer from "../../components/VerticallyCenteredContainer";
 import Question from "../../models/Question";
@@ -77,7 +77,7 @@ const QuizEditQuestions = () => {
                 await questionsService.update(question.id, question.contents, question.answerA, question.answerB, question.answerC, question.answerD, question.correctAnswer);
             if (!response.success) {
                 setIndex(i);
-                setError(error);
+                setError(response.message);
                 return;
             }
         }
@@ -90,25 +90,21 @@ const QuizEditQuestions = () => {
     return (
         <RouteTemplate>
             <VerticallyCenteredContainer>
-                <div className="d-flex flex-column bg-white rounded p-3">
-                    <div className="d-flex flex-row justify-content-center m-1">
-                        <span className="text-danger">{error}</span>
-                    </div>
+                <div className="min-w-75 min-h-50 d-flex flex-column justify-content-center text-center opaque-white rounded p-3">
+                    <span className="text-danger m-1">{error}</span>
                     <div className="d-flex flex-row align-items-center m-1">
                         <div className="col-2">
                             { index >= 1 && <button className="btn btn-primary" type="button" onClick={previous}>Previous</button> }
                         </div>
-                        <div className="col-8">
-                            { questions.length !== 0 && <QuestionCard question={ questions[index] } setQuestion={ setQuestion }/> }
-                            <div className="d-flex flex-row justify-content-center">
-                                <button className="btn btn-danger" type="button" onClick={deleteQuestion}>Delete question</button>
-                            </div>
+                        <div className="col-8 d-flex flex-column align-items-center">
+                            { questions.length !== 0 && <QuestionEditCard question={ questions[index] } setQuestion={ setQuestion }/> }
+                            <button className="btn btn-danger" type="button" onClick={deleteQuestion}>Delete question</button>
                         </div>
                         <div className="col-2">
                             <button className="btn btn-primary text-nowrap" type="button" onClick={next}>{ index + 1 === questions.length ? "Add question" : "Next" }</button>
                         </div>
                     </div>
-                    <div className="d-flex flex-row justify-content-center m-1">
+                    <div className="text-center m-1">
                         <button className="btn btn-success" type="button" onClick={saveChanges}>Save changes</button>
                     </div>
                 </div>

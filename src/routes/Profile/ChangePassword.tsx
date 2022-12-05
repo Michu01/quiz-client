@@ -30,17 +30,17 @@ const ProfileChangePassword = () => {
     return (
         <RouteTemplate>
             <CenteredContainer>
-                <form onSubmit={e => handleSubmit(e)}>
+                <form className="p-3" onSubmit={e => handleSubmit(e)}>
                     <div className="form-group text-center">
                         <span className="form-text text-danger">{error}</span>
                     </div>
                     <div className="form-group row">
                         <label className="col col-form-label text-left" htmlFor="currentPassword">Current password</label>
-                        <input className="col form-control" title="current password" name="currentPassword" type="password" required></input>
+                        <input className="col form-control" title="Current password" name="currentPassword" type="password" required></input>
                     </div>
                     <div className="form-group row">
                         <label className="col col-form-label text-left" htmlFor="newPassword">New password</label>
-                        <input className="col form-control" title="new password" name="newPassword" type="password" required></input>
+                        <input className="col form-control" title="New password" name="newPassword" type="password" required></input>
                     </div>
                     <div className="text-center">
                         <button className="btn btn-primary" type="submit">Change password</button>

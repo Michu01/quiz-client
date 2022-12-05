@@ -37,7 +37,7 @@ const ProfileChangeAvatar = () => {
                         <span className="form-text text-danger">{error}</span>
                     </div>
                     <div className="form-group">
-                        <input className="col form-control" title="avatar" name="avatar" type="file" required/>
+                        <input className="col form-control" title="Avatar" name="avatar" type="file" required/>
                     </div>
                     <div className="text-center">
                         <button className="btn btn-primary" type="submit">Change avatar</button>

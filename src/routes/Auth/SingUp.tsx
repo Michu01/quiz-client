@@ -30,7 +30,7 @@ const AuthSignUp = () => {
     return (
         <RouteTemplate>
             <CenteredContainer>
-                <form onSubmit={e => handleSubmit(e)}>
+                <form className="p-3" onSubmit={e => handleSubmit(e)}>
                     <div className="form-group text-center">
                         <span className="form-text text-danger">{error}</span>
                     </div>

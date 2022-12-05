@@ -41,33 +41,29 @@ const Index = () => {
     return (
         <RouteTemplate>
             <VerticallyCenteredContainer>
-                <div className="d-flex flex-row">
-                    <div className="col-2"/>
-                    <div className="col-8 d-flex flex-column align-items-center text-center rounded p-3 opaque-white">
-                    {
-                        isSignedIn && user != null &&
-                        <>
-                            <h1>Welcome back, {user.name}!</h1>
-                            <Link className="h3" to="/quizes">All quizes</Link>
-                            <Link className="h3" to="/quizes?creatorFilter=me">My quizes</Link>
-                            <Link className="h3" to="/quizes?creatorFilter=friends">Friends' quizes</Link>
-                            <Link className="h3" to="/quizes/create">Create quiz</Link>
-                            <Link className="h3" to="/users?friendsOnly=on">Friends</Link>
-                            <Link className="h3" to="/profile">Profile</Link>
-                        </>
-                    }
-                    {
-                        !isSignedIn && 
-                        <>
-                            <h1>Welcome to QuizApp!</h1>
-                            <h3>QuizApp is a place where you can create quizes and share them with your friends</h3>
-                            <h4>Do you have an account?<Link className="mx-1" to="/auth/signIn">Sign in</Link></h4>
-                            <h4>Are you new?<Link className="mx-1" to="/auth/signUp">Create an account</Link></h4>
-                            <h4>Want to just look around?<Link className="mx-1" to="/quizes">Browse quizes</Link></h4>
-                        </>
-                    }
-                    </div>
-                    <div className="col-2"/>
+                <div className="min-w-75 min-h-50 d-flex flex-column justify-content-center text-center rounded p-3 opaque-white">
+                {
+                    isSignedIn && user != null &&
+                    <>
+                        <h1>Welcome back, {user.name}!</h1>
+                        <Link className="h3" to="/quizes">All quizes</Link>
+                        <Link className="h3" to="/quizes?creatorFilter=me">My quizes</Link>
+                        <Link className="h3" to="/quizes?creatorFilter=friends">Friends' quizes</Link>
+                        <Link className="h3" to="/quizes/create">Create quiz</Link>
+                        <Link className="h3" to="/users?friendsOnly=on">Friends</Link>
+                        <Link className="h3" to="/profile">Profile</Link>
+                    </>
+                }
+                {
+                    !isSignedIn && 
+                    <>
+                        <h1>Welcome to QuizApp!</h1>
+                        <h3>QuizApp is a place where you can create quizes and share them with your friends</h3>
+                        <h4>Do you have an account?<Link className="mx-1" to="/auth/signIn">Sign in</Link></h4>
+                        <h4>Are you new?<Link className="mx-1" to="/auth/signUp">Create an account</Link></h4>
+                        <h4>Want to just look around?<Link className="mx-1" to="/quizes">Browse quizes</Link></h4>
+                    </>
+                }
                 </div>
             </VerticallyCenteredContainer>
         </RouteTemplate>

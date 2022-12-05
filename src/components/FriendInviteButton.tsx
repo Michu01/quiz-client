@@ -83,13 +83,18 @@ const FriendInviteButton = ({ userId, className }: { userId: number, className?:
     return (
         <>
         {
-            isFriend && <button className={ className + " btn btn-danger"} onClick={unfriend}>Unfriend</button>
-        }
-        {
-            !isFriend && !isInvited && <button className={ className + " btn btn-success"} onClick={addFriend}>Add friend</button>
-        }
-        {
-            !isFriend && isInvited && <button className={ className + " btn btn-warning"} onClick={cancelInvitation}>Cancel invitation</button>
+            isFriend != null && isInvited != null &&
+            <>
+            {
+                isFriend && <button className={ className + " btn btn-danger"} onClick={unfriend}>Unfriend</button>
+            }
+            {
+                !isFriend && !isInvited && <button className={ className + " btn btn-success"} onClick={addFriend}>Add friend</button>
+            }
+            {
+                !isFriend && isInvited && <button className={ className + " btn btn-warning"} onClick={cancelInvitation}>Cancel invitation</button>
+            }
+            </>
         }
         </>
     )

@@ -62,35 +62,31 @@ const QuizCreate = () => {
     return (
         <RouteTemplate>
             <VerticallyCenteredContainer>
-                <div className="d-flex flex-row">
-                    <div className="col-2"/>
-                    <div className="col-8 d-flex flex-column align-items-center bg-white rounded p-3">
-                        <form className="w-50" onSubmit={e => handleSubmit(e)}>
-                            <div className="form-group text-center">
-                                <span className="text-danger">{error}</span>
-                            </div>
-                            <div className="form-group row mr-0">
-                                <label className="col-4 col-form-label" htmlFor="quizName">Name</label>
-                                <input className="col-8 form-control" maxLength={64} title="Name" name="quizName" type="text" required/>
-                            </div>
-                            <div className="form-group">
-                                <label className="form-label" htmlFor="description">Description</label>
-                                <textarea className="form-control" maxLength={256} title="Description" name="description" required/>
-                            </div>
-                            <div className="form-group row">
-                                <label className="col-4 col-form-label" htmlFor="categoryId">Category</label>
-                                <Select className="col-8" name="categoryId" required options={categoryOptions}/>
-                            </div>
-                            <div className="form-group row">
-                                <label className="col-4 col-form-label" htmlFor="access">Access</label>
-                                <Select className="col-8" name="access" required options={accessOptions} defaultValue={accessOptions[0]}/>
-                            </div>
-                            <div className="form-group text-center">
-                                <button className="btn btn-success" type="submit">Create quiz</button>
-                            </div>
-                        </form>
-                    </div>
-                    <div className="col-2"/>
+                <div className="min-w-75 min-h-50 d-flex flex-row justify-content-center align-items-center rounded p-3 opaque-white">
+                    <form className="w-50" onSubmit={e => handleSubmit(e)}>
+                        <div className="form-group text-center">
+                            <span className="text-danger">{error}</span>
+                        </div>
+                        <div className="form-group row mr-0">
+                            <label className="col-4 col-form-label" htmlFor="quizName">Name</label>
+                            <input className="col-8 form-control" maxLength={64} title="Name" name="quizName" type="text" required/>
+                        </div>
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="description">Description</label>
+                            <textarea className="form-control" maxLength={256} title="Description" name="description" required/>
+                        </div>
+                        <div className="form-group row">
+                            <label className="col-4 col-form-label" htmlFor="categoryId">Category</label>
+                            <Select className="col-8" name="categoryId" required options={categoryOptions}/>
+                        </div>
+                        <div className="form-group row">
+                            <label className="col-4 col-form-label" htmlFor="access">Access</label>
+                            <Select className="col-8" name="access" required options={accessOptions} defaultValue={accessOptions[0]}/>
+                        </div>
+                        <div className="form-group text-center">
+                            <button className="btn btn-success" type="submit">Create quiz</button>
+                        </div>
+                    </form>
                 </div>
             </VerticallyCenteredContainer>
         </RouteTemplate>
